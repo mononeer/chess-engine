@@ -1,0 +1,28 @@
+# CMake build artifacts
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+compile_commands.json
+
+# Common build output directories
+/build/
+/bin/
+/out/
+
+# Executables and libraries
+*.exe
+*.out
+*.so
+*.a
+*.dll
+aetherchess
+
+# Object files
+*.o
+*.obj
+
+# Editor-specific files
+.vscode/
+*.swp
+*.swo

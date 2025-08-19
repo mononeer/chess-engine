@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include "../core/types.h"
+#include "core/types.h"
 
 // For __builtin_ctzll and __builtin_popcountll on GCC/Clang.
 // On MSVC, use <intrin.h> for _BitScanForward64 and __popcnt64.

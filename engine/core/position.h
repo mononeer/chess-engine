@@ -1,8 +1,8 @@
 #pragma once
 
 #include "types.h"
-#include "../bitboard/bitboard.h"
-#include "../zobrist/zobrist.h"
+#include "bitboard/bitboard.h"
+#include "zobrist/zobrist.h"
 
 namespace aetherchess {
 

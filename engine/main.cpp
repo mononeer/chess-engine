@@ -1,48 +1,32 @@
 #include <iostream>
+#include <string>
 #include "core/position.h"
-#include "bitboard/bitboard.h"
-#include "zobrist/zobrist.h"
 #include "movegen/attacks.h"
+#include "zobrist/zobrist.h"
+#include "movegen/movegen.h"
+#include "perft.h"
+#include "eval/eval.h"
 
-// Helper function to set a piece on the board in a position object.
-void set_piece(aetherchess::Position& pos, aetherchess::Square s, aetherchess::Color c, aetherchess::PieceType pt) {
-    // Set the piece on the mailbox arrays
-    pos.color_on_sq[s] = c;
-    pos.piece_on_sq[s] = pt;
-
-    // Set the bit on the corresponding bitboards
-    int color_idx = static_cast<int>(c);
-    int piece_type_idx = static_cast<int>(pt);
-    aetherchess::BB::set_bit(pos.piece_bbs[color_idx][piece_type_idx], s);
-    aetherchess::BB::set_bit(pos.color_bbs[color_idx], s);
-}
-
+// The main entry point for the AetherChess engine.
+// This is currently set up to run a perft test for debugging.
 int main() {
-    // 1. Initialize engine subsystems
     aetherchess::Zobrist::init();
     aetherchess::Attacks::init();
 
     std::cout << "AetherChess Engine" << std::endl;
     std::cout << "------------------" << std::endl;
 
-    // 2. Set up a custom position to demonstrate functionality
-    aetherchess::Position pos = {}; // Zero-initialize the position
-    pos.side_to_move = aetherchess::Color::WHITE;
-    pos.castling_rights = aetherchess::CastlingRights::ANY_CASTLING;
+    aetherchess::Position pos;
+    const std::string start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    pos.set_from_fen(start_fen);
 
-    // Place a few pieces on the board
-    set_piece(pos, aetherchess::E1, aetherchess::Color::WHITE, aetherchess::PieceType::KING);
-    set_piece(pos, aetherchess::E8, aetherchess::Color::BLACK, aetherchess::PieceType::KING);
-    set_piece(pos, aetherchess::A1, aetherchess::Color::WHITE, aetherchess::PieceType::ROOK);
-    set_piece(pos, aetherchess::H8, aetherchess::Color::BLACK, aetherchess::PieceType::ROOK);
-    set_piece(pos, aetherchess::D4, aetherchess::Color::WHITE, aetherchess::PieceType::PAWN);
-    set_piece(pos, aetherchess::E5, aetherchess::Color::BLACK, aetherchess::PieceType::PAWN);
+    std::cout << "Running Perft from starting position..." << std::endl;
+    std::cout << "Note: Perft(3) has a known bug (8903 vs 8902)." << std::endl;
 
-    // 3. Calculate the Zobrist hash for this position
-    pos.hash_key = pos.calculate_hash();
-
-    std::cout << "Successfully set up custom position." << std::endl;
-    std::cout << "Zobrist hash for this position: " << pos.hash_key << std::endl;
+    for (int depth = 1; depth <= 3; ++depth) {
+        uint64_t nodes = Perft::run(pos, depth);
+        std::cout << "perft(" << depth << ") = " << nodes << std::endl;
+    }
 
     return 0;
 }

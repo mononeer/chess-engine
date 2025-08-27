@@ -17,8 +17,11 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set(ENGINE_SOURCES
     main.cpp
     zobrist/zobrist.cpp
+    core/position.cpp
     movegen/attacks.cpp
     movegen/movegen.cpp
+    perft.cpp
+    eval/eval.cpp
 )
 
 # Create the engine executable from the source files.

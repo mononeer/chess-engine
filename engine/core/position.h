@@ -3,6 +3,8 @@
 #include "types.h"
 #include "bitboard/bitboard.h"
 #include "zobrist/zobrist.h"
+#include <string>
+#include <array>
 
 namespace aetherchess {
 
@@ -35,10 +37,23 @@ struct Position {
 
     // --- Member Functions ---
 
-    // (Future work: implement these)
-    // void set_from_fen(const std::string& fen_string);
-    // void make_move(Move m);
-    // void unmake_move(Move m);
+    // --- State History & Undo Information ---
+    struct StateInfo {
+        CastlingRights castling_rights;
+        Square en_passant_sq;
+        int halfmove_clock;
+        PieceType captured_piece;
+        uint64_t hash_key;
+    };
+    std::array<StateInfo, 256> history;
+    int history_ply = 0;
+
+    // --- Member Functions ---
+    void set_from_fen(const std::string& fen_string);
+    bool make_move(Move m);
+    void unmake_move(Move m);
+    bool is_in_check(Color c) const;
+    bool is_square_attacked(Square s, Color attacker_color) const;
 
     // Calculates the Zobrist hash from scratch based on the current board state.
     uint64_t calculate_hash() const {
